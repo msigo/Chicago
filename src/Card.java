@@ -16,8 +16,10 @@ public class Card extends JPanel{
 
     private BufferedImage image;
     private int runs = 0;
+    private String path;
 
     Card(String path) {
+    	this.path = path;
     	try {                
           image = ImageIO.read(new File(System.getProperty("user.dir")+"/Playing_Cards/"+path));
        } catch (IOException ex) {
@@ -27,15 +29,20 @@ public class Card extends JPanel{
     }
     
     void changeCard(String path){
-    	try {                
+    	try {   
             image = ImageIO.read(new File(System.getProperty("user.dir")+"/Playing_Cards/"+path));
+            this.path = path;
          } catch (IOException ex) {
               // handle exception...
-      	   System.out.println("Could not find the path to the Image");
+      	   System.out.println("Could not find the path to the Image: "+ path);
          }
     }
     void showCard(boolean choise){
     	this.setVisible(choise);
+    }
+    
+    String getPath(){
+    	return this.path;
     }
     
     @Override

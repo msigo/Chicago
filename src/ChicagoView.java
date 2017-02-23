@@ -19,6 +19,7 @@ public class ChicagoView extends JFrame{
 	Trash trash;
 	ButtonBar buttons;
 	ResultBar resultBar;
+	Thread waitForPlayer = new Thread();
 	
 	ChicagoView(ChicagoPlayer player){
 		this.setTitle("Chicago");
@@ -88,7 +89,7 @@ public class ChicagoView extends JFrame{
 		Dimension size = card.getPreferredSize();
 		card.setBounds(pos[4]+60, 200, size.width, size.height);
 	}
-	JPanel oneUp(Card card){
+	JPanel oneUp(Card card, int numberOfRuns){
 		JPanel panel = new JPanel();
 		panel.setSize(41, 21);
 		panel.setOpaque(false);
@@ -99,12 +100,12 @@ public class ChicagoView extends JFrame{
 		this.buttons.setVisible(false);		
 		panel.setVisible(true);
 		
-		new Thread(new Runnable() {
+		this.waitForPlayer = new Thread(new Runnable() {
 		    private ButtonBar buttons;
 		    private JPanel panel;
 		    
 		    //Make sure that the other button returns when buttons is pressed 
-		    public Runnable init(ButtonBar buttons, JPanel panel) {
+		    public Runnable init(ButtonBar buttons, JPanel panel, int numberOfRuns) {
 		        this.buttons = buttons;
 		        this.panel = panel;
 		        return this;
@@ -112,7 +113,6 @@ public class ChicagoView extends JFrame{
 		    @Override
 		    public void run() {
 		        while(panel.isVisible()){
-		        	//System.out.println(panel.isVisible());
 		        	try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
@@ -120,9 +120,11 @@ public class ChicagoView extends JFrame{
 						e.printStackTrace();
 					}
 		        }
-		        buttons.setVisible(true);
+		        if(numberOfRuns !=1)
+		        	buttons.setVisible(true);
 		    }
-		}.init(this.buttons, panel)).start();
+		}.init(this.buttons, panel, numberOfRuns));
+		this.waitForPlayer.start();
 		
 		this.add(panel);
 		panel.setBounds(this.buttons.getBounds().x,this.buttons.getBounds().y,100,100);
@@ -130,6 +132,7 @@ public class ChicagoView extends JFrame{
 		Dimension size = card.getPreferredSize();
 		card.setBounds(this.buttons.getBounds().x-60,this.buttons.getBounds().y, size.width, size.height);
 		card.showCard(true);
+		
 		return panel;
 		
 	}

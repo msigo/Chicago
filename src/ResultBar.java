@@ -17,16 +17,13 @@ public class ResultBar extends JPanel{
     	}
     }
     
-    
-    void showCard(boolean choise){
-    	this.setVisible(choise);
-    };
     void updateScore(String player, int scoreToInsert){
     	for(int i =0;i<playerNames.length;i++){
     		if(playerNames[i].equals(player)){
     			score[i] = scoreToInsert;
     		}
     	}
+    	this.repaint();
     }
     
     @Override

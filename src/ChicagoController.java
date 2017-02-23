@@ -11,10 +11,12 @@ public class ChicagoController {
 		createCards();
 		shuffleCards();
 		String[] paths = new String[]{deckOfCards[0],deckOfCards[1],deckOfCards[2],deckOfCards[3],deckOfCards[4]};
-		counterOfUsedCards = 4;
+		counterOfUsedCards = 5;
 		ChicagoPlayer player = new ChicagoPlayer(paths);
 		ChicagoView view = new ChicagoView(player);
 		ChicagoManipulation manipulation = new ChicagoManipulation(view, player,this);
+		
+		System.out.println("Done");
 		
 	}
 	void incrementcounterOfUsedCards(){
@@ -31,8 +33,8 @@ public class ChicagoController {
 	
 	void createCards(){
 		int i=0;
-		for(String type:typeOfCard){
-			for(String val:values){
+		for(String val:values){
+			for(String type:typeOfCard){
 				deckOfCards[i] = val + "_of_"+type+".png";
 				i++;
 			}

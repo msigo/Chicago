@@ -19,6 +19,7 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 	ChicagoPlayer player;
 	ChicagoView view;
 	ChicagoController control;
+	int numberOfPlayedRounds = 0;
 	
 	public ChicagoManipulation(ChicagoView view, ChicagoPlayer player,ChicagoController control) {
 		this.player = player;
@@ -40,6 +41,7 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		
 		if(e.getSource().equals(view.buttons.AcceptButton)){
 			
 			int numberOfCardsToChange = 0;
@@ -60,9 +62,9 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 				final ChicagoView viewFinal = view;
 				final ChicagoPlayer playerFinal = player;
 				final ChicagoController controlFinal = control;
-
+				final JPanel oneUpPanel = view.oneUp(cardToChange,this.numberOfPlayedRounds);
 				
-				for(Component comp : view.oneUp(cardToChange).getComponents()){
+				for(Component comp : oneUpPanel.getComponents()){
 					comp.addMouseListener(new MouseListener() {
 					
 					@Override
@@ -104,20 +106,27 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 					}
 				});;
 				}
-				
-				
-				return;
 			}
+			else{
 
-			for(Card card: player.allCards){
-				if(card.isVisible()==false){
-					card.changeCard(control.deckOfCards[control.getcounterOfUsedCards()]);
-					control.incrementcounterOfUsedCards();;
-					view.setLocationOfCard(player, card);
-					card.showCard(true);
+				for(Card card: player.allCards){
+					if(card.isVisible()==false){
+						card.changeCard(control.deckOfCards[control.getcounterOfUsedCards()]);
+						control.incrementcounterOfUsedCards();;
+						view.setLocationOfCard(player, card);
+						card.showCard(true);
+					}
 				}
 			}
+			if(this.numberOfPlayedRounds ==1){
+				this.view.buttons.setVisible(false);
+			}
+			else{
+				this.numberOfPlayedRounds++;
+			}
 		}
+		System.out.println(this.numberOfPlayedRounds);
+		view.resultBar.updateScore("Marc", player.evaluateCards());
 			
 	}
 

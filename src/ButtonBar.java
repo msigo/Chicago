@@ -10,5 +10,6 @@ public class ButtonBar extends JPanel {
 
 	}
 	public void changeToSecondMode(){
+		
 	}
 }

@@ -15,10 +15,20 @@ public class ChicagoController {
 		ChicagoPlayer player = new ChicagoPlayer(paths);
 		ChicagoView view = new ChicagoView(player);
 		ChicagoManipulation manipulation = new ChicagoManipulation(view, player,this);
+		view.MoveForwardInGame(1);
+
+		//Wait until the pokerPart is done
+		synchronized (view) {
+		    try {
+				view.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		
-		System.out.println("Done");
-		
+		System.out.println("Poker Part done, Now lets play 'stick'");		
 	}
+	
 	void incrementcounterOfUsedCards(){
 		if(counterOfUsedCards == 51){
 			shuffleCards();
@@ -43,7 +53,8 @@ public class ChicagoController {
 	}
 	void shuffleCards(){
 		Collections.shuffle(Arrays.asList(deckOfCards));
-		}
+	}
+	
 	public static void main(String[] args) {
 		new ChicagoController();
 	}

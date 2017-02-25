@@ -6,12 +6,14 @@ public class ChicagoPlayer {
 	Card[] allCards = new Card[5];
 	Integer[] values = new Integer[5];
 	String[] CardColor =new String[5];
+	String name ="";
 
 	public ChicagoPlayer(String[] paths) {
 		for(int i = 0; i<5; i++){
 			allCards[i] = new Card(paths[i]);
 		}
 	}
+	
 	public int evaluateCards(){
 		boolean containsKing=false;
 		for(int i=0; i<5;i++){
@@ -56,14 +58,6 @@ public class ChicagoPlayer {
 		if(check2pairs()) return 2;
 		if(checkPair()) return 1;
 		return 0;
-		//System.out.print(check4OfAKind()?"Four Of A Kind":"");
-		//System.out.print(checkFlush()?"Flush":"");
-		//System.out.print(checkFullHouse()?"FullHouse":"");
-		//System.out.print(checkStraight()?"Straight":"");
-		//System.out.print(check3OfAKind()?"Three Of A kind":"");
-		//System.out.print(check2pairs()?"Two pairs":"");
-		//System.out.print(checkPair()?"Pair":"");
-		//System.out.println();
 		}
 	private boolean checkFlush(){
 		String[] array = {CardColor[0], CardColor[1], CardColor[2], CardColor[3], CardColor[4]};
@@ -73,7 +67,6 @@ public class ChicagoPlayer {
 	private boolean checkStraight(){
 		return (values[0]+1 == values[1] && values[1]+1 == values[2] 
 				&& values[2]+1 == values[3] && values[3]+1 ==values[4])?true:false;
-		
 	}
 	private boolean checkStraightFlush(){
 		return (checkFlush() && checkStraight())? true: false;

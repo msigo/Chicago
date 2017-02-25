@@ -1,14 +1,5 @@
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.List;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -16,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ChicagoView extends JFrame{
+	ChicagoPlayer player;
 	Trash trash;
 	ButtonBar buttons;
 	ResultBar resultBar;
@@ -30,8 +22,15 @@ public class ChicagoView extends JFrame{
 		this.setLocation(0, 0);
 		this.setSize(550, 300);
 		
-		trash = new Trash(System.getProperty("user.dir")+"/trash.png");
 		resultBar = new ResultBar(new String[]{"Marc", "Carl", "Oscar", "Greta"});
+		this.player = player;
+
+		createPokerGamePart();
+		
+	}
+	
+	void createPokerGamePart(){
+		trash = new Trash(System.getProperty("user.dir")+"/trash.png");
 		buttons = new ButtonBar();
 
 		this.setLocationRelativeTo(null);
@@ -43,10 +42,10 @@ public class ChicagoView extends JFrame{
 		size = buttons.getPreferredSize();
 		buttons.setBounds(400,80,size.width, size.height);
 
-		size = player.allCards[0].getPreferredSize();
-		for(int i = 0; i<player.allCards.length;i++){
-			player.allCards[i].setBounds(350-i*60,200,size.width, size.height);
-			this.add(player.allCards[i]);
+		size = this.player.allCards[0].getPreferredSize();
+		for(int i = 0; i<this.player.allCards.length;i++){
+			this.player.allCards[i].setBounds(350-i*60,200,size.width, size.height);
+			this.add(this.player.allCards[i]);
 		}
 	
 		this.add(resultBar);
@@ -89,6 +88,33 @@ public class ChicagoView extends JFrame{
 		Dimension size = card.getPreferredSize();
 		card.setBounds(pos[4]+60, 200, size.width, size.height);
 	}
+	
+	void MoveForwardInGame(JPanel panel, int numberOfRuns){
+		panel.setVisible(false);
+		this.getContentPane().remove(panel);
+		if(numberOfRuns != 1){
+			this.buttons.setVisible(true);
+		}
+		else{
+			createStickPartOfGame();
+		}
+	}
+	void MoveForwardInGame(int numberOfRuns){
+		if(numberOfRuns ==1){
+			createStickPartOfGame();
+		}
+	}
+	void createStickPartOfGame(){
+		synchronized (this) {
+		    this.notify(); 
+		}
+		System.out.println("I'm in remove phase");
+		this.remove(trash);
+		this.remove(buttons);
+		this.add(resultBar);
+		this.repaint();
+		}
+	
 	JPanel oneUp(Card card, int numberOfRuns){
 		JPanel panel = new JPanel();
 		panel.setSize(41, 21);
@@ -99,32 +125,6 @@ public class ChicagoView extends JFrame{
 		panel.add(no);
 		this.buttons.setVisible(false);		
 		panel.setVisible(true);
-		
-		this.waitForPlayer = new Thread(new Runnable() {
-		    private ButtonBar buttons;
-		    private JPanel panel;
-		    
-		    //Make sure that the other button returns when buttons is pressed 
-		    public Runnable init(ButtonBar buttons, JPanel panel, int numberOfRuns) {
-		        this.buttons = buttons;
-		        this.panel = panel;
-		        return this;
-		    }
-		    @Override
-		    public void run() {
-		        while(panel.isVisible()){
-		        	try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		        }
-		        if(numberOfRuns !=1)
-		        	buttons.setVisible(true);
-		    }
-		}.init(this.buttons, panel, numberOfRuns));
-		this.waitForPlayer.start();
 		
 		this.add(panel);
 		panel.setBounds(this.buttons.getBounds().x,this.buttons.getBounds().y,100,100);

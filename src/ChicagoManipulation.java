@@ -63,6 +63,7 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 				final ChicagoPlayer playerFinal = player;
 				final ChicagoController controlFinal = control;
 				final JPanel oneUpPanel = view.oneUp(cardToChange,this.numberOfPlayedRounds);
+				final int numberOfPlayedRoundsfinal = numberOfPlayedRounds;
 				
 				for(Component comp : oneUpPanel.getComponents()){
 					comp.addMouseListener(new MouseListener() {
@@ -74,7 +75,8 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 					@Override
 					public void mousePressed(MouseEvent e) {
 						cardToChangeFinal.setVisible(false);
-						e.getComponent().getParent().setVisible(false);
+						viewFinal.MoveForwardInGame((JPanel) (e.getComponent().getParent()), numberOfPlayedRoundsfinal);
+
 						if((((JButton) e.getSource()).getText().equals("Yes"))){
 							viewFinal.setLocationOfCard(playerFinal, cardToChangeFinal);
 						}
@@ -117,7 +119,9 @@ public class ChicagoManipulation implements MouseMotionListener, MouseListener{
 						card.showCard(true);
 					}
 				}
+				view.MoveForwardInGame(this.numberOfPlayedRounds);
 			}
+			
 			if(this.numberOfPlayedRounds ==1){
 				this.view.buttons.setVisible(false);
 			}
